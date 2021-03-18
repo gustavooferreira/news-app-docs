@@ -7,14 +7,15 @@ count-words: ## Count words in Markdown files
 	@wc -w *.md
 
 
-.PHONY: generate-pdfs
-generate-pdf: ## Generates PDF docs
-	@pandoc README.md -s -o README.pdf
+.PHONY: lint
+lint: ## Run linters
+	@yamllint openapi/*.yaml
 
 
 .PHONY: clean
 clean: ## Remove generate pdfs
 	@rm -f README.pdf
+	@rm -f DESIGN_DOC.pdf
 
 
 .PHONY: generate-imgs
@@ -22,6 +23,12 @@ generate-imgs: ## Generate diagram images
 	@echo "Generating PNG diagram:"
 	@drawio -x -b 40 -s 1 -p 0 -o ./images/bin/logical_diagram.png ./images/src/diagrams.drawio
 	@drawio -x -b 40 -s 1 -p 1 -o ./images/bin/ha.png ./images/src/diagrams.drawio
+
+
+.PHONY: generate-pdfs
+generate-pdf: ## Generates PDF docs
+	@pandoc README.md -s -o README.pdf
+	@pandoc DESIGN_DOC.md -s -o DESIGN_DOC.pdf
 
 
 GREEN  := $(shell tput -Txterm setaf 2)
