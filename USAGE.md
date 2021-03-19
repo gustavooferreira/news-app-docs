@@ -4,16 +4,16 @@ In this document there are a few examples of calls to the APIs.
 
 ## Health checks
 
-To check the health status of the feeds management web service:
+To check the health status of the `feeds management web service`:
 
 ```bash
-curl -s http://localhost:9000/healthcheck | jq .
+curl -s http://localhost:9000/api/v1/healthcheck | jq .
 ```
 
-To check the health status of the articles management web service:
+To check the health status of the `articles management web service`:
 
 ```bash
-curl -s http://localhost:9001/healthcheck | jq .
+curl -s http://localhost:9001/api/v1/healthcheck | jq .
 ```
 
 For both requests you should get a response like this:
@@ -57,3 +57,9 @@ curl -X PUT -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> -d '{"enabled"
 ---
 
 ## Articles management requests
+
+To get list of articles:
+
+```bash
+curl -s http://localhost:9001/api/v1/articles | jq .
+```

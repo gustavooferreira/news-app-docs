@@ -31,6 +31,24 @@ generate-pdf: ## Generates PDF docs
 	@pandoc DESIGN_DOC.md -s -o DESIGN_DOC.pdf
 
 
+# ##############
+# Docker section
+# ##############
+
+
+.PHONY: start-docker-env
+start-docker-env: ## Set up and run docker environment
+	@docker-compose up -d
+
+
+.PHONY: stop-docker-env
+stop-docker-env: ## Tear down docker environment
+	@docker-compose down
+
+
+##############################################################
+
+
 GREEN  := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 WHITE  := $(shell tput -Txterm setaf 7)
