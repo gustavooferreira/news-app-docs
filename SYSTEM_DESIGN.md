@@ -30,6 +30,14 @@ Some examples of that are: logging setup and corresponding interfaces and implem
 
 For both APIs we start off with the API version in the path. There are a few ways of versioning APIs, I personally like this method more.
 
+## Git workflow
+
+Normally, I have 3 branches `master`, `test` and `develop` and I usually branch off `develop` to implement features. I then commit frequently to those feature branches and just before merging them I squash all commits in the feature branch into one, so the commit represents one unit of work.
+
+For this project, I will not be doing that given the extra work and the fact that I'm not collaborating with anyone else. Instead, I'll be committing frequently to the master branch.
+
+This applies to all repos belonging to this project.
+
 ## Expansion and improvements
 
 This service has no awareness of users preferences. I assume these are being kept in a different service.
