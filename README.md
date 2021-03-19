@@ -2,9 +2,9 @@
 
 Repo holding documentation for News App.
 
-- [Design documentation](SYSTEM_DESIGN.md)
-- Setup guide
-- Usage doc
+- [Design document](SYSTEM_DESIGN.md)
+- [Setup guide](SETUP_GUIDE.md)
+- [How to call the APIs](USAGE.md)
 
 Use [Swagger Editor](https://editor.swagger.io/) to visualize the API specs.
 
