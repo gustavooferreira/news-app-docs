@@ -6,6 +6,12 @@ The `docker-compose` file is located in this repository to avoid creating yet an
 
 First, you will have to generate the docker images for all 3 services mentioned in the [readme](README.md) and [design document](SYSTEM_DESIGN.md). Instructions provided in the corresponding repo of each service.
 
+To build the images, all you need to do is clone each service repo, and while inside each repo's folder, run:
+
+```bash
+make build-docker
+```
+
 Once you have the 3 images in your local docker images cache, you can start the environment.
 
 To start the development environment please run the following command:
@@ -29,6 +35,6 @@ Both API ports are exposed on the host as follows:
 - Feeds Management API port: 9000
 - Articles Management API port: 9001
 
-You can immediately start firing requests to those APIs according to the instruction in [usage guide](USAGE.md).
+You can immediately start firing requests to those APIs according to the instructions in the [usage guide](USAGE.md).
 
-For more details about the APIs, please find their respective specifications in the `openapi` directory.
+For more details about the APIs, please find their respective specifications in the [openapi directory](openapi).

@@ -29,8 +29,9 @@ This application was split into several repositories, below are the links to eac
 
 The names of the repositories are unnecessarily long because github doesn't support the concept of grouping like gitlab does.
 
-Components:
+Repositories:
 
+- [This repo](https://github.com/gustavooferreira/news-app-docs)
 - [Feeds Management Service](https://github.com/gustavooferreira/news-app-feeds-mgmt-service)
 - [Articles Management Service](https://github.com/gustavooferreira/news-app-articles-mgmt-service)
 - [Fetcher Service](https://github.com/gustavooferreira/news-app-fetcher-service)

@@ -10,6 +10,7 @@ count-words: ## Count words in Markdown files
 .PHONY: lint
 lint: ## Run linters
 	@yamllint openapi/*.yaml
+	@yamllint docker/*.yaml
 
 
 .PHONY: clean
@@ -38,12 +39,12 @@ generate-pdf: ## Generates PDF docs
 
 .PHONY: start-docker-env
 start-docker-env: ## Set up and run docker environment
-	@docker-compose up -d
+	@docker-compose -f docker/docker-compose.yaml -p news_app up -d
 
 
 .PHONY: stop-docker-env
 stop-docker-env: ## Tear down docker environment
-	@docker-compose down
+	@docker-compose -f docker/docker-compose.yaml -p news_app down
 
 
 ##############################################################

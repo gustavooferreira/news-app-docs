@@ -1,6 +1,6 @@
 # Usage
 
-In this document there are a few examples of calls to the APIs.
+In this document there are a few examples of possible requests to the APIs.
 
 ## Health checks
 
@@ -28,15 +28,15 @@ For both requests you should get a response like this:
 
 ## Feeds management requests
 
-To get list of feeds:
+To get a list of feeds:
 
 ```bash
 curl -s http://localhost:9000/api/v1/feeds | jq .
 ```
 
-This call supports an optional query parameter, `enabled` which is set to true by default.
+This call supports an optional query parameter, that acts as a filter, `enabled` which is set to true by default.
 
-To add a feed:
+To add a new feed:
 
 ```bash
 curl -X POST -s http://localhost:9000/api/v1/feeds -d '{"url": "<FEED_URL_HERE>", "provider": "<FEED_PROVIDER_HERE>", "category": "<FEED_CATEGORY_HERE>"}' | jq .
@@ -58,7 +58,7 @@ curl -X PUT -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> -d '{"enabled"
 
 ## Articles management requests
 
-To get list of articles:
+To get a list of articles:
 
 ```bash
 curl -s http://localhost:9001/api/v1/articles | jq .
