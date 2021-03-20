@@ -14,9 +14,7 @@ The documentation of the APIs was created using OpenAPI (fka Swagger).
 
 The specs are stored inside the `openapi` folder.
 
-The view the spec, either use [Swagger Editor](https://editor.swagger.io/) and import the yaml files (one at a time).
-
-Or just click the links below, which will redirect you directly to Swagger UI:
+To view the specs, either use [Swagger Editor](https://editor.swagger.io/) and import the yaml files (one at a time), or just click the links below, which will redirect you directly to Swagger UI:
 
 - [Feeds Management API Spec](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/gustavooferreira/news-app-docs/master/openapi/feeds_mgmt_api_spec.yaml)
 - [Articles Management API Spec](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/gustavooferreira/news-app-docs/master/openapi/articles_mgmt_api_spec.yaml)

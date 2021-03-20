@@ -31,42 +31,152 @@ paths:
       - maintenance
       summary: Check API service health
       description: Returns status of the API service.
-      operationId: "healthcheck"
       responses:
         '200':
           description: Service is OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HealthcheckResponse"
+                $ref: '#/components/schemas/HealthcheckResponse'
         '500':
           description: Service is not healthy
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
+                $ref: '#/components/schemas/ApiErrorResponse'
   /feeds:
     get:
       tags:
       - feeds
       summary: Get list of RSS feeds
-      description: yolo
-      operationId: "get_feeds"
+      description: This endpoint returns a list of RSS feeds.
+      parameters:
+      - in: query
+        name: enabled
+        description: RSS feed enabled
+        schema:
+          type: boolean
+          default: true
       responses:
         '200':
-          description: Service is OK
+          description: List of feeds
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HealthcheckResponse"
+                $ref: '#/components/schemas/Feeds'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags:
+      - feeds
+      summary: Add new RSS feed
+      description: This endpoint adds a new RSS feed to the database.
+      requestBody:
+        description: feed to add to the database
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Feed'
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /feeds/{url}:
+    put:
+      tags:
+      - feeds
+      summary: Change RSS feed state
+      description: This endpoint enables/disables RSS feed.
+      parameters:
+      - in: path
+        name: url
+        required: true
+        description: RSS URL
+        schema:
+          type: string
+      requestBody:
+        description: feed state
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/FeedState'
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+      - feeds
+      summary: Remove a RSS feed
+      description: This endpoint removes an RSS feed.
+      parameters:
+      - in: path
+        name: url
+        required: true
+        description: RSS URL
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Feed removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
 components:
   responses:
-    '400':
+    BadRequest:
       description: Invalid Parameters
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ApiErrorResponse"
+            $ref: '#/components/schemas/ApiErrorResponse'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    ConflictError:
+      description: Conflict Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    InternalError:
+      description: Internal Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
   schemas:
     ApiErrorResponse:
       type: object
@@ -76,6 +186,15 @@ components:
         message:
           type: string
           description: Message explaining the error reason.
+    SuccessResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: string
+          enum:
+          - OK
     HealthcheckResponse:
       type: object
       required:
@@ -85,3 +204,27 @@ components:
           type: string
           enum:
           - OK
+    Feeds:
+      type: array
+      items:
+        $ref: '#/components/schemas/Feed'
+    Feed:
+      type: object
+      required:
+      - url
+      - provider
+      - category
+      properties:
+        url:
+          type: string
+        provider:
+          type: string
+        category:
+          type: string
+    FeedState:
+      type: object
+      required:
+      - enabled
+      properties:
+        enabled:
+          type: boolean
