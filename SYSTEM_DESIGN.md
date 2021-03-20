@@ -12,11 +12,11 @@ The `fetcher service` is responsible for periodically fetching new articles from
 
 ## Design decisions
 
-I decided to use MongoDB for storing the articles metadata as I believe it lands itself well within a document like store. We could accomplish the same thing with a relational database however.
+I decided to use a relational database for storing the articles metadata as I believe it lands itself well for this type of service given all we need is a place with a simple and clear structure to store data we get from the RSS feeds.
 
-I decided to use a relational database for the feeds management service as all we need is persistence storage with minimal look up functionality.
+I also decided to use a relational database for the feeds management service as all we need is persistent storage with minimal look up functionality.
 
-In any case, we could have swapped both DBs or use only one of them for both services, as this is a fairly simple service and I don't believe database choice, in this case, matters too much.
+In any case, we could have chosen a document store, like MongoDB, or even a wide column store, like Cassandra, for any of these services. Since this is a fairly simple service I don't believe database choice, in this case, matters too much.
 
 We'd have to consider this further if we were planing on growing this service, but at that point, we would most certainly have more requirements or at least an idea of the future features we would want these services to have, which would in turn provide more clarity on which database would make more sense for each service.
 
@@ -61,7 +61,7 @@ First, we can use a TTL for entries, after that TTL expires, entries in the cach
 
 I'd do caching based on the filtering parameters, which in this case is `provider` and `category`.
 
-I've recently discovered `groupcache`, created by the original memcache author, and I quite like what it has to offer, especially when it comes to not requiring external dependencies for caching purposes, not to mention replication of hot keys across different instances and what not.
+I've recently discovered `groupcache`, created by the original memcached author, and I quite like what it has to offer, especially when it comes to not requiring external dependencies for caching purposes, not to mention replication of hot keys across different instances and what not.
 However, because it doesn't support an expiry time and neither does it support explicit cache evictions, we would have to change our caching strategy to be able to use this service.
 
 ## High Availability and scalability
@@ -74,8 +74,9 @@ We can scale the Feeds and Articles management APIs very easily by putting a loa
 
 Both services are stateless simple CRUD services.
 
-Both MySQL and MongoDB can be setup in a cluster to provide resiliency.
-We can do the same with Redis.
+MySQL can be setup in a cluster to provide resiliency and so can Redis.
+
+In the diagram I only show one MySQL cluster, as we would only setup a physical cluster and then have DB separation at the logical level.
 
 As for the fetcher service, this one is more trick to scale. The problem is that at the moment, the fetcher service is setup in a way that it sends a request to each RSS provider every X minutes/hours.
 
