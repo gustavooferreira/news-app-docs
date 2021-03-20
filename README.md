@@ -12,14 +12,14 @@ This repository holds all documentation related to the News App System.
 
 The documentation of the APIs was created using OpenAPI (fka Swagger).
 
-Please use [Swagger Editor](https://editor.swagger.io/) to visualize the API specs from the yaml files.
+The specs are stored inside the `openapi` folder.
 
-The easiest way to achieve this is by going to the website provided above and import one of the spec files linked below.
+The view the spec, either use [Swagger Editor](https://editor.swagger.io/) and import the yaml files (one at a time).
 
-OpenAPI specs:
+Or just click the links below, which will redirect you directly to Swagger UI:
 
-- [Feeds Management API Spec](openapi/feeds_mgmt_api_spec.yaml)
-- [Articles Management API Spec](openapi/articles_mgmt_api_spec.yaml)
+- [Feeds Management API Spec](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/gustavooferreira/news-app-docs/master/openapi/feeds_mgmt_api_spec.yaml)
+- [Articles Management API Spec](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/gustavooferreira/news-app-docs/master/openapi/articles_mgmt_api_spec.yaml)
 
 ---
 

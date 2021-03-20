@@ -56,8 +56,8 @@ If this is not possible or undesirable, we can still improve the fetcher by maki
 
 ## Notes
 
-Redis caching is not yet implemented, but if I were to add caching to the articles services, there are two ways we could go about doing this.
-First, we can use a TTL for entries, after that TTL expires, entries in the cache would expire. Second, instead of having a TTL, we could support explicit cache eviction. What this would mean is that, every time the fetcher got new articles, upon sending a request to the articles management service to add those new entries, the articles service could then evict entries related to those providers.
+Redis caching is not yet implemented, but if I were to add caching to the articles service, there are two ways we could go about doing this.
+First, we can use a TTL for entries, after that TTL expires, entries in the cache would expire. Second, instead of having a TTL, we could support explicit cache eviction. What this would mean is that, every time the fetcher got new articles, upon sending a request to the articles management service to add those new entries, the articles service could then evict entries related to those feeds.
 
 I'd do caching based on the filtering parameters, which in this case is `provider` and `category`.
 
@@ -70,7 +70,7 @@ The picture below shows how we could scale each service independently.
 
 ![High availability](images/bin/ha.png)
 
-We can scale the Feeds and Articles management APIs very easily by putting a load balancer in front of these services and having multiple instances of each service.
+We can scale the Feeds and Articles management services very easily by putting a load balancer in front of these services and having multiple instances of each service.
 
 Both services are stateless simple CRUD services.
 
@@ -78,15 +78,15 @@ MySQL can be setup in a cluster to provide resiliency and so can Redis.
 
 In the diagram I only show one MySQL cluster, as we would only setup a physical cluster and then have DB separation at the logical level.
 
-As for the fetcher service, this one is more trick to scale. The problem is that at the moment, the fetcher service is setup in a way that it sends a request to each RSS provider every X minutes/hours.
+As for the fetcher service, this one is trickier to scale. The problem is that at the moment, the fetcher service is setup in a way that it sends a request to each RSS url every X minutes/hours.
 
 If we deploy several instances of this services, then they would all be doing the same work every time. Making unnecessary requests to the feed providers and not accomplishing much.
 
 A better way to setup this service would be to split it into two components. One component's job is to fetch new articles from the feed providers and the other is responsible for queueing up work at a specific times for the fetcher to do the job. Here, we could use a distributed messaging queue system like kafka or rabbitMQ, but I have not detailed that in the diagram above.
 
-With this setup we can have as many `fetcher services` as we would like and if one or more of them goes down, we continue to have a fully functional system.
+With this setup we can have as many `fetcher` services as we would like and if one or more of them goes down, we continue to have a fully functional system.
 
-With regards to the controller, which is the component that decides when to actually fetch for new updates, it's a bit more tricky. Since we can only have one instance deciding at any given time when to trigger new jobs, we could have a sort of quorum being established between the controller instances and voting for who's the master at any given point in time. In that way, we guarantee that only one instance is queueing up jobs at any given point in time.
+With regards to the controller, which is the component that decides when to actually fetch for new updates, it's a bit trickier. Since we can only have one instance deciding at any given time when to trigger new jobs, we could have a sort of quorum being established between the controller instances and voting for who's the master at any given point in time. In that way, we guarantee that only one instance is queueing up jobs at any given point in time.
 
 Another thing I'd add is an API so that we have the option to trigger fetches of RSS feeds asynchronously. One use case for this is when a user decides to add a new RSS URL, we could trigger an immediate fetch to that feed.
 
