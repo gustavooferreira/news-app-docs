@@ -1,22 +1,22 @@
 # Usage
 
-In this document there are a few examples of possible requests to the APIs.
+This document provides a few examples of possible requests to the APIs.
 
 ## Health checks
 
-To check the health status of the `feeds management web service`:
+To check the health status of the `feeds management service`:
 
 ```bash
 curl -s http://localhost:9000/api/v1/healthcheck | jq .
 ```
 
-To check the health status of the `articles management web service`:
+To check the health status of the `articles management service`:
 
 ```bash
 curl -s http://localhost:9001/api/v1/healthcheck | jq .
 ```
 
-For both requests you should get a response like this:
+For both requests you should get a 200 status code and a response like this:
 
 ```json
 {
@@ -28,13 +28,19 @@ For both requests you should get a response like this:
 
 ## Feeds management requests
 
-To get a list of feeds:
+To get a list of feeds (note by default it will only return enabled feeds):
 
 ```bash
 curl -s http://localhost:9000/api/v1/feeds | jq .
 ```
 
-This call supports an optional query parameter, that acts as a filter, `enabled` which is set to true by default.
+This call supports 3 optional query parameters that acts as a filter: `enabled` which is set to true by default, `provider` and `category`.
+
+Example response:
+
+```json
+
+```
 
 To add a new feed:
 
