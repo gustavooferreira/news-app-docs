@@ -10,11 +10,32 @@ The `fetcher service` is responsible for periodically fetching new articles from
 
 ![diagram](images/bin/logical_diagram.png)
 
+# System operation
+
+As I've said above this system is made up of 3 services.
+
+The `feeds management service` which is responsible for keeping track of which RSS feeds our applications pulls data from, is built as a simple CRUD API on top of MySQL.
+
+The `aritcles management service` which is responsible for collecting all the articles metadata from all providers, is also a simple CRUD API on top of MySQL.
+
+Finally, the `fetcher service` which is responsible for actually talking to the RSS feed providers, is a simple service that every X minutes/hours (configurable) will fetch all RSS feed URLs.
+
+The way the `fetcher service` works is as follows:
+
+- Tick timer triggered
+- Send request to `feeds management service` to get a list of all the RSS feeds it needs to pull data from
+- Fetch data from all RSS feeds
+- Send all data to the `articles management service`
+
+There are better ways to accomplish this, I could for example have the fetcher talk to the articles management service to get all the latest articles publish date for all the providers and than when we get the data back from the RSS feed we could only choose to send the new articles to the `articles management service`. This would be a much better way of doing it.
+
+But I've decided to just "dump" all the data into the `articles management service` and let it discard the data that it already has. If this was a service in production, I wouldn't do it like this. Also because this approach puts more unnecessary pressure onto the `articles management service` to sort out the data it gets.
+
 ## Design decisions
 
 I decided to use a relational database for storing the articles metadata as I believe it lands itself well for this type of service given all we need is a place with a simple and clear structure to store data we get from the RSS feeds.
 
-I also decided to use a relational database for the feeds management service as all we need is persistent storage with minimal look up functionality.
+I also decided to use a relational database for the feeds management service as all we need is a persistent storage with minimal look up capabilities.
 
 In any case, we could have chosen a document store, like MongoDB, or even a wide column store, like Cassandra, for any of these services. Since this is a fairly simple service I don't believe database choice, in this case, matters too much.
 
@@ -45,24 +66,24 @@ If we were in charge of developing the whole application that supports the mobil
 
 Then, I'd add an extra API (let's call it `entry API`) that would take care of contacting all these services when the client makes a request.
 
-For example: mobile app sends a request to `entry API` asking for all new articles since last time it contacted us. First, this request would have to include either a timestamp of the last time it contacted us or something else that allows us to track when was the last request made.
-Then, the `entry API` would first authenticate this request, then contact the user preferences services to get the list of RSS feeds this user had configured and finally make a request to the articles management service to get all the latest articles, and finally send a response back.
+For example: mobile app sends a request to `entry API` asking for all new articles since last time it contacted us. First, this request would have to include either a timestamp of the last time it contacted us or something else that would allow us to track when was the last request made.
+Then, the `entry API` would first authenticate this request, then contact the user preferences services to get the list of RSS feeds this user had configured and then make a request to the articles management service to get all the latest articles and finally send a response back.
 
-Fetcher is a service that could be greatly improved. I touched upon some points on the scalability section, but I want to mention a couple of them here. One is the ability to trigger a fetch asynchronously. Currently, as it stands the fetcher will periodically fetch the RSS feeds. If a user adds a new provider, we need to wait for the next cycle to start in order to see articles related to that provider. A better way of doing this would be to be able to trigger an async fetch to that provider.
+Fetcher is a service that could be greatly improved. I touched upon some points on the scalability section, but I want to mention a couple of them here. One feature I'd have liked to add is the ability to trigger a fetch asynchronously. Currently, as it stands the fetcher will periodically fetch the RSS feeds. If a user adds a new provider, we need to wait for the next cycle to start in order to see articles related to that provider. A better way of doing this would be to be able to trigger an async fetch to that provider.
 
 Another thing we could improve on the fetcher is to leverage a PUSH service that would notify us of when new articles are available, to avoid the polling mechanism.
 
-If this is not possible or undesirable, we can still improve the fetcher by making the polling time dynamic. Basically, we would have a timer for each provider and adjust it according to the frequency of updates observed.
+If this is not possible or undesirable, we can still improve the fetcher by making the polling time dynamic. Basically, we would have a timer for each provider/category and adjust it accordingly to the frequency of updates observed.
 
 ## Notes
 
 Redis caching is not yet implemented, but if I were to add caching to the articles service, there are two ways we could go about doing this.
-First, we can use a TTL for entries, after that TTL expires, entries in the cache would expire. Second, instead of having a TTL, we could support explicit cache eviction. What this would mean is that, every time the fetcher got new articles, upon sending a request to the articles management service to add those new entries, the articles service could then evict entries related to those feeds.
+First, we can use a TTL for entries, after that TTL expires, entries in the cache would be removed. Second, instead of having a TTL, we could support explicit cache eviction. What this would mean is that, every time the fetcher got new articles, upon sending a request to the articles management service to add those new entries, the articles service could then evict entries in the cache related to those feeds.
 
 I'd do caching based on the filtering parameters, which in this case is `provider` and `category`.
 
 I've recently discovered `groupcache`, created by the original memcached author, and I quite like what it has to offer, especially when it comes to not requiring external dependencies for caching purposes, not to mention replication of hot keys across different instances and what not.
-However, because it doesn't support an expiry time and neither does it support explicit cache evictions, we would have to change our caching strategy to be able to use this service.
+However, because it doesn't have support for expiry time neither does it support explicit cache evictions, we would have to change our caching strategy to be able to use this service.
 
 ## High Availability and scalability
 
