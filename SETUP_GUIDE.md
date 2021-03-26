@@ -49,3 +49,36 @@ Both API ports are exposed on the host as follows:
 You can immediately start firing requests to those APIs according to the instructions in the [usage guide](USAGE.md).
 
 For more details about the APIs, please find their respective specifications in the [openapi directory](openapi).
+
+# Notes
+
+The `news_feeds` database comes preloaded with the following feeds.
+
+Table `feeds`:
+
+| url                                               | provider | category | enabled |
+| ------------------------------------------------- | :------: | :------: | :-----: |
+| http://feeds.bbci.co.uk/news/uk/rss.xml           |    1     |    1     |  true   |
+| http://feeds.bbci.co.uk/news/technology/rss.xml   |    1     |    2     |  true   |
+| http://feeds.skynews.com/feeds/rss/uk.xml         |    2     |    1     |  true   |
+| http://feeds.skynews.com/feeds/rss/technology.xml |    2     |    2     |  true   |
+
+url is a Primary key.
+
+Table `providers`:
+
+| id  | name     |
+| :-: | -------- |
+|  1  | BBC News |
+|  2  | Sky News |
+
+id is a Primary key.
+
+Table `categories`:
+
+| id  | name       |
+| :-: | ---------- |
+|  1  | UK         |
+|  2  | Technology |
+
+id is a Primary key.
