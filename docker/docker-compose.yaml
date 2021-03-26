@@ -10,7 +10,7 @@ services:
       - NEWS_APP_FEEDS_MGMT_DATABASE_DBNAME=news_feeds
       - ENV=develop
     ports:
-      - "8080:9000"
+      - 9000:8080
     networks:
       - backend
     depends_on:

@@ -7,13 +7,13 @@ This document provides a few examples of possible requests to the APIs.
 To check the health status of the `feeds management service`:
 
 ```bash
-curl -s http://localhost:9000/api/v1/healthcheck | jq .
+curl -i http://localhost:9000/api/v1/healthcheck
 ```
 
 To check the health status of the `articles management service`:
 
 ```bash
-curl -s http://localhost:9001/api/v1/healthcheck | jq .
+curl -i http://localhost:9001/api/v1/healthcheck
 ```
 
 For both requests you should get a 200 status code and a response like this:
