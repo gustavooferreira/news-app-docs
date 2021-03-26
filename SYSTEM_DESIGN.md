@@ -47,6 +47,8 @@ There is code in some of these services that could be reused and therefore, in a
 
 Some examples of that are: logging setup and their corresponding interfaces and implementation, configuration setup (in this case I'd rather use a library like Viper).
 
+I have not escaped the fields used on the SQL statements because I'm using GORM. GORM already escapes all fields in certain conditions, but certainly not all. [See this](https://gorm.io/id_ID/docs/security.html).
+
 ## API design decisions
 
 For both APIs we start off with the API version in the path. There are a few ways of versioning APIs, I personally like this method more.
