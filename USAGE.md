@@ -28,18 +28,39 @@ For both requests you should get a 200 status code and a response like this:
 
 ## Feeds management requests
 
-To get a list of feeds (note by default it will only return enabled feeds):
+To get a list of feeds (by default it will only return enabled feeds):
 
 ```bash
 curl -s http://localhost:9000/api/v1/feeds | jq .
 ```
 
-This call supports 3 optional query parameters that acts as a filter: `enabled` which is set to true by default, `provider` and `category`.
+This call supports 3 optional query parameters that act as a filter: `enabled` which is set to true by default, `provider` and `category`.
 
 Example response:
 
 ```json
-
+[
+  {
+    "url": "http://feeds.bbci.co.uk/news/technology/rss.xml",
+    "provider": "BBC News",
+    "category": "Technology"
+  },
+  {
+    "url": "http://feeds.bbci.co.uk/news/uk/rss.xml",
+    "provider": "BBC News",
+    "category": "UK"
+  },
+  {
+    "url": "http://feeds.skynews.com/feeds/rss/technology.xml",
+    "provider": "Sky News",
+    "category": "Technology"
+  },
+  {
+    "url": "http://feeds.skynews.com/feeds/rss/uk.xml",
+    "provider": "Sky News",
+    "category": "UK"
+  }
+]
 ```
 
 To add a new feed:
@@ -48,16 +69,16 @@ To add a new feed:
 curl -X POST -s http://localhost:9000/api/v1/feeds -d '{"url": "<FEED_URL_HERE>", "provider": "<FEED_PROVIDER_HERE>", "category": "<FEED_CATEGORY_HERE>"}' | jq .
 ```
 
-To remove a feed:
-
-```bash
-curl -X DELETE -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> | jq .
-```
-
 To enable/disable a feed:
 
 ```bash
 curl -X PUT -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> -d '{"enabled": false}' | jq .
+```
+
+To remove a feed:
+
+```bash
+curl -X DELETE -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> | jq .
 ```
 
 ---
