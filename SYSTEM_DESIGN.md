@@ -10,7 +10,7 @@ The `fetcher service` is responsible for periodically fetching new articles from
 
 ![diagram](images/bin/logical_diagram.png)
 
-# System operation
+## System operation
 
 As I've said above this system is made up of 3 services.
 
@@ -50,6 +50,14 @@ Some examples of that are: logging setup and their corresponding interfaces and 
 ## API design decisions
 
 For both APIs we start off with the API version in the path. There are a few ways of versioning APIs, I personally like this method more.
+
+On the `articles management service` API, one of the endpoints has the path `/articles:batch` with the HTTP method `POST`. This is inline with the [google API design guide](https://cloud.google.com/apis/design/custom_methods).
+
+Still on the `articles management service` API, there is another endpoint to get a list of articles metadata. This endpoint is paginated and uses the keyset pagination technique based on the published time.
+
+The way this works in the articles API is, the user gets the X number of articles (max is set to 50 to avoid abusing the service), and then looks for the last article's published date and supplies that on the next call. When the user receives less articles than the number requested, it means the user has reached the end.
+
+I could have provided a nicer mechanism to let the API client know when we don't have any more records, especially because if the number of records in the database is a multiple of the number supplied as the `limit` i.e., the number of articles to receive on each call, it means the API client will have to make an extra call in the end and receive an empty response to realise there are no more articles.
 
 ## Git workflow
 

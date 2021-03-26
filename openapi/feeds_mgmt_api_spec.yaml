@@ -87,7 +87,7 @@ paths:
       summary: Add new RSS feed
       description: This endpoint adds a new RSS feed to the database.
       requestBody:
-        description: feed to add to the database
+        description: Feed to add to the database
         required: true
         content:
           'application/json':
@@ -99,7 +99,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
-          description: RSS feed URL already exists in the database.
+          description: RSS feed URL already exists in the database
           content:
             application/json:
               schema:
@@ -111,7 +111,7 @@ paths:
       tags:
       - feeds
       summary: Change RSS feed state
-      description: This endpoint enables/disables a RSS feed.
+      description: This endpoint enables/disables a RSS feed
       parameters:
       - in: path
         name: url
@@ -139,7 +139,7 @@ paths:
       tags:
       - feeds
       summary: Remove a RSS feed
-      description: This endpoint removes an RSS feed from the database.
+      description: This endpoint removes an RSS feed from the database
       parameters:
       - in: path
         name: url
