@@ -8,9 +8,22 @@ services:
       - NEWS_APP_FEEDS_MGMT_DATABASE_USERNAME=app_client
       - NEWS_APP_FEEDS_MGMT_DATABASE_PASSWORD=password
       - NEWS_APP_FEEDS_MGMT_DATABASE_DBNAME=news_feeds
-      - ENV=develop
     ports:
       - 9000:8080
+    networks:
+      - backend
+    depends_on:
+      - database
+  articles_service:
+    image: news-app/articles-api-server:latest
+    restart: always
+    environment:
+      - NEWS_APP_ARTICLES_MGMT_DATABASE_HOST=database
+      - NEWS_APP_ARTICLES_MGMT_DATABASE_USERNAME=app_client
+      - NEWS_APP_ARTICLES_MGMT_DATABASE_PASSWORD=password
+      - NEWS_APP_ARTICLES_MGMT_DATABASE_DBNAME=news_articles
+    ports:
+      - 9001:8080
     networks:
       - backend
     depends_on:
@@ -22,6 +35,7 @@ services:
       - MYSQL_ROOT_PASSWORD=password
     volumes:
       - ./feeds-mgmt-service/dump.sql:/docker-entrypoint-initdb.d/a-dump.sql:ro
+      - ./articles-mgmt-service/dump.sql:/docker-entrypoint-initdb.d/b-dump.sql:ro
       - ./database/dump.sql:/docker-entrypoint-initdb.d/c-dump.sql:ro
     networks:
       - backend
