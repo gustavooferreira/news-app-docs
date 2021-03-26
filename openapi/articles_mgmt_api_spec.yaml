@@ -72,12 +72,14 @@ paths:
           enum:
           - asc
           - desc
+          default: desc
       - in: query
         name: limit
         description: Number of articles to return
         schema:
           type: integer
-          maximum: 50
+          default: 50
+          maximum: 200
       - in: query
         name: after
         description: Articles to return after provided date-time
