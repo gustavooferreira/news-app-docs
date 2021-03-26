@@ -188,6 +188,8 @@ components:
       - description
       - link
       - published_date
+      - provider
+      - category
       properties:
         guid:
           type: string
@@ -200,3 +202,7 @@ components:
         published_date:
           type: string
           format: date-time
+        provider:
+          type: string
+        category:
+          type: string
