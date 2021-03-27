@@ -39,7 +39,18 @@ services:
       - ./database/dump.sql:/docker-entrypoint-initdb.d/c-dump.sql:ro
     networks:
       - backend
-
+  fetcher_service:
+    image: news-app/fetcher-server:latest
+    restart: always
+    environment:
+      - NEWS_APP_FETCHER_FEEDSMGMTSERVICE_HOST=feeds_service
+      - NEWS_APP_FETCHER_ARTICLESMGMTSERVICE_HOST=articles_service
+      - NEWS_APP_FETCHER_OPTIONS_CYCLEPERIOD=60
+    networks:
+      - backend
+    depends_on:
+      - feeds_service
+      - articles_service
 networks:
   backend:
     driver: bridge
