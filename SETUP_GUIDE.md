@@ -52,7 +52,7 @@ For more details about the APIs, please find their respective specifications in 
 
 # Notes
 
-The `news_feeds` database comes preloaded with the following feeds.
+The `news_feeds` database comes preloaded with the following entries.
 
 Table `feeds`:
 
@@ -63,8 +63,6 @@ Table `feeds`:
 | http://feeds.skynews.com/feeds/rss/uk.xml         |    2     |    1     |  true   |
 | http://feeds.skynews.com/feeds/rss/technology.xml |    2     |    2     |  true   |
 
-url is a Primary key.
-
 Table `providers`:
 
 | id  | name     |
@@ -72,13 +70,9 @@ Table `providers`:
 |  1  | BBC News |
 |  2  | Sky News |
 
-id is a Primary key.
-
 Table `categories`:
 
 | id  | name       |
 | :-: | ---------- |
 |  1  | UK         |
 |  2  | Technology |
-
-id is a Primary key.

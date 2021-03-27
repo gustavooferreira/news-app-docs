@@ -66,19 +66,19 @@ Example response:
 To add a new feed:
 
 ```bash
-curl -X POST -s http://localhost:9000/api/v1/feeds -d '{"url": "<FEED_URL_HERE>", "provider": "<FEED_PROVIDER_HERE>", "category": "<FEED_CATEGORY_HERE>"}' | jq .
+curl -i -X POST http://localhost:9000/api/v1/feeds -d '{"url": "<FEED_URL_HERE>", "provider": "<FEED_PROVIDER_HERE>", "category": "<FEED_CATEGORY_HERE>"}' | jq .
 ```
 
 To enable/disable a feed:
 
 ```bash
-curl -X PUT -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> -d '{"enabled": false}' | jq .
+curl -i -X PUT http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> -d '{"enabled": false}' | jq .
 ```
 
 To remove a feed:
 
 ```bash
-curl -X DELETE -s http://localhost:9000/api/v1/feeds/<FEED_URL_HERE> | jq .
+curl -i -X DELETE http://localhost:9000/api/v1/feeds/<FEED_URL_HERE>
 ```
 
 ---
@@ -89,4 +89,10 @@ To get a list of articles:
 
 ```bash
 curl -s http://localhost:9001/api/v1/articles | jq .
+```
+
+To add a new article:
+
+```bash
+curl -i -X POST 'http://localhost:9001/api/v1/articles' -d '{"guid":"guid1", "title": "title1", "description": "desc1", "link": "link1", "provider": "provider1", "category": "category1", "published_date": "2020-05-10T10:00:00+02:00"}'
 ```
