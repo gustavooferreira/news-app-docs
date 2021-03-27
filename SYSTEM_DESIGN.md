@@ -41,6 +41,8 @@ In any case, we could have chosen a document store, like MongoDB, or even a wide
 
 We'd have to consider this further if we were planing on growing this service, but at that point, we would most certainly have more requirements or at least an idea of the future features we would want these services to have, which would in turn provide more clarity on which database would make more sense for each service.
 
+A note goes to the fact that both the `feeds management service` and the `articles management service` could have been combined. This would be perfectly valid as they are both related. I decided to split them because I wanted to have 3 services instead of 2, which shouldn't be a reason to decide to split a service in the first place, but this is just an exercise.
+
 ## Development decisions
 
 There is code in some of these services that could be reused and therefore, in a production grade codebase I'd most definitely be moving that code into their own libraries.
@@ -57,9 +59,11 @@ On the `articles management service` API, one of the endpoints has the path `/ar
 
 Still on the `articles management service` API, there is another endpoint to get a list of articles metadata. This endpoint is paginated and uses the keyset pagination technique based on the published time.
 
-The way this works in the articles API is, the user gets the X number of articles (max is set to 50 to avoid abusing the service), and then looks for the last article's published date and supplies that on the next call. When the user receives less articles than the number requested, it means the user has reached the end.
+The way this works in the articles API is, the user gets the X number of articles (max is set to 200 to avoid abusing the service), and then looks for the last article's published date and supplies that on the next call. When the user receives less articles than the number requested, it means the user has reached the end.
 
 I could have provided a nicer mechanism to let the API client know when we don't have any more records, especially because if the number of records in the database is a multiple of the number supplied as the `limit` i.e., the number of articles to receive on each call, it means the API client will have to make an extra call in the end and receive an empty response to realise there are no more articles.
+
+Another thing I would like to point out is that, the `article management` API only allows to filter by one provider at a time. I could have improved this by having a query parameter called `providers` instead and have the ability for clients to pass several providers, comma separated, in that query parameter. Same goes to the `category` query parameter.
 
 ## Git workflow
 
