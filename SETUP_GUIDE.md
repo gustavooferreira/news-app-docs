@@ -34,7 +34,7 @@ curl -i http://localhost:9001/api/v1/healthcheck
 By default the fetcher will make requests to the RSS feeds once every minute.
 Please wait for a minute until you can see the articles metadata being populated in the database.
 
-You can issue the following command to see the fetcher logs reporting when the fetcher his making those requests.
+You can issue the following command to see the fetcher logs reporting when the fetcher is making those requests.
 
 ```bash
 docker logs -f news_app_fetcher_service_1

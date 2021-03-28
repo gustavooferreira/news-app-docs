@@ -16,9 +16,9 @@ As I've said above this system is made up of 3 services.
 
 The `feeds management service` which is responsible for keeping track of which RSS feeds our applications pulls data from, is built as a simple CRUD API on top of MySQL.
 
-The `aritcles management service` which is responsible for collecting all the articles metadata from all providers, is also a simple CRUD API on top of MySQL.
+The `articles management service` which is responsible for collecting all the articles metadata from all providers, is also a simple CRUD API on top of MySQL.
 
-Finally, the `fetcher service` which is responsible for actually talking to the RSS feed providers, is a simple service that every X minutes/hours (configurable) will fetch all RSS feed URLs.
+Finally, the `fetcher service` which is responsible for actually talking to the RSS feed providers, is a simple service that every X minutes/hours (configurable) will fetch new articles from all RSS feed URLs.
 
 The way the `fetcher service` works is as follows:
 
@@ -27,7 +27,7 @@ The way the `fetcher service` works is as follows:
 - Fetch data from all RSS feeds
 - Send all data to the `articles management service`
 
-There are better ways to accomplish this, I could for example have the fetcher talk to the articles management service to get all the latest articles publish date for all the providers and than when we get the data back from the RSS feed we could only choose to send the new articles to the `articles management service`. This would be a much better way of doing it.
+There are better ways to accomplish this, I could for example have the fetcher talk to the articles management service to get all the latest articles publish date for all the providers and then when we get the data back from the RSS feed we could choose to send only the new articles to the `articles management service`. This would be a much better way of doing it.
 
 But I've decided to just "dump" all the data into the `articles management service` and let it discard the data that it already has. If this was a service in production, I wouldn't do it like this. Also because this approach puts more unnecessary pressure onto the `articles management service` to sort out the data it gets.
 
@@ -63,7 +63,7 @@ The way this works in the articles API is, the user gets the X number of article
 
 I could have provided a nicer mechanism to let the API client know when we don't have any more records, especially because if the number of records in the database is a multiple of the number supplied as the `limit` i.e., the number of articles to receive on each call, it means the API client will have to make an extra call in the end and receive an empty response to realise there are no more articles.
 
-Another thing I would like to point out is that, the `article management` API only allows to filter by one provider at a time. I could have improved this by having a query parameter called `providers` instead and have the ability for clients to pass several providers, comma separated, in that query parameter. Same goes to the `category` query parameter.
+Another thing I would like to point out is that, the `article management` API only allows to filter by one provider at a time. I could have improved this by having a query parameter called `providers` instead and have the ability for clients to pass several providers, comma separated, in that query parameter. Same goes for the `category` query parameter.
 
 ## Git workflow
 
@@ -91,10 +91,10 @@ If this is not possible or undesirable, we can still improve the fetcher by maki
 
 ## Notes
 
-Redis caching is not yet implemented, but if I were to add caching to the articles service, there are two ways we could go about doing this.
-First, we can use a TTL for entries, after that TTL expires, entries in the cache would be removed. Second, instead of having a TTL, we could support explicit cache eviction. What this would mean is that, every time the fetcher got new articles, upon sending a request to the articles management service to add those new entries, the articles service could then evict entries in the cache related to those feeds.
+Redis caching was not implemented, but if I were to add caching to the articles service, there are two ways we could go about doing this.
+First, we can use a TTL for entries, after that TTL expires, entries in the cache would be removed. Second, instead of having a TTL, we could support explicit cache eviction. What this would mean is that, every time the fetcher got new articles, upon sending a request to the articles management service to add those new entries, the articles service could then evict entries in the cache related to those feeds providers/categories.
 
-I'd do caching based on the filtering parameters, which in this case is `provider` and `category`.
+I'd do caching based on the filtering parameters.
 
 I've recently discovered `groupcache`, created by the original memcached author, and I quite like what it has to offer, especially when it comes to not requiring external dependencies for caching purposes, not to mention replication of hot keys across different instances and what not.
 However, because it doesn't have support for expiry time neither does it support explicit cache evictions, we would have to change our caching strategy to be able to use this service.
@@ -126,5 +126,3 @@ With regards to the controller, which is the component that decides when to actu
 Another thing I'd add is an API so that we have the option to trigger fetches of RSS feeds asynchronously. One use case for this is when a user decides to add a new RSS URL, we could trigger an immediate fetch to that feed.
 
 Finally, if we want to provide geo-resiliency we can use Anycast VIPs, and let BGP do the work.
-
-A note goes to databases spread across multiple regions. This is a hard problem. I personally prefer to stick with a managed solution when possible, like AWS RDS.
